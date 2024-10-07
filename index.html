@@ -6,15 +6,9 @@
     <title>Twiddler Viper Edition!</title>
     
     <!-- Bootstrap for layout -->
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-    />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <!-- Custom Fonts for racer theme -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet" />
     <!-- External Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
@@ -44,7 +38,8 @@
       }
 
       .tweet-form input {
-        width: 80%;
+        width: 45%;
+        margin: 10px;
         border-radius: 10px;
         border: none;
         padding: 10px;
@@ -66,16 +61,32 @@
       .timestamp {
         color: #d3d3d3;
       }
+
+      /* Dodge Viper image */
+      .viper-image {
+        width: 100%;
+        max-width: 860px;
+        margin-bottom: 30px;
+        border-radius: 10px;
+      }
     </style>
   </head>
 
   <body>
     <div class="container mt-5">
       <div class="row">
-        <div class="col-md-8 offset-md-2">
-          <!-- Tweet Form -->
+        <div class="col-md-8 offset-md-2 text-center">
+          <!-- Add the Viper image -->
+          <img
+            src="https://imgs.search.brave.com/Q8g3D4M3WOpD0Mc2ioZWgaeS-mgnE6eienV_ZWo0rZ4/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy8z/LzM5L1NSVF9WaXBl/cl9HVFNfYmx1ZS0y/LmpwZw"
+            class="viper-image"
+            alt="Dodge Viper 2005 Blue"
+          />
+
+          <!-- Tweet Form (with username and tweet input combined) -->
           <form class="tweet-form mb-4 d-flex justify-content-between">
-            <input type="text" class="tweet-input" placeholder="Race to tweet..." />
+            <input type="text" class="username-input" placeholder="Enter your username..." required />
+            <input type="text" class="tweet-input" placeholder="What’s happening?" required />
             <button class="tweet-button">Vroom!</button>
           </form>
 
