@@ -4,6 +4,11 @@ $(document).ready(() => {
   const $tweetForm = $('form.tweet-form');
   const $usernameInput = $tweetForm.find('.username-input');
   const $tweetInput = $tweetForm.find('.tweet-input');
+  const $filterIndicator = $('#filter-indicator');
+  const $filterText = $('#filter-text');
+  const $clearFilterBtn = $('#clear-filter');
+  const $refreshFeedBtn = $('#refresh-feed');
+
   let lastTweetIndex = 0;
   let activeUserFilter = null; // Track active user filter
   let activeHashtagFilter = null; // Track active hashtag filter
@@ -30,6 +35,7 @@ $(document).ready(() => {
         activeUserFilter = tweet.user; // Set the active user filter
         activeHashtagFilter = null; // Clear hashtag filter when showing user tweets
         showUserTweets(tweet.user);
+        showFilterIndicator(`Showing tweets by @${tweet.user}`);
       });
 
       // Append tweet details to the tweet-box div
@@ -72,13 +78,39 @@ $(document).ready(() => {
     renderTweets(hashtagTweets);
   };
 
+  // Show the filter indicator
+  const showFilterIndicator = (message) => {
+    $filterText.text(message);
+    $filterIndicator.show(); // Make the filter indicator visible
+  };
+
+  // Clear filter and reset the view
+  const clearFilter = () => {
+    activeUserFilter = null;
+    activeHashtagFilter = null;
+    $filterIndicator.hide(); // Hide the filter indicator
+    renderTweets(streams.home); // Show all tweets
+  };
+
+  // Refresh feed and reset view (same as clearing the filter)
+  const refreshFeed = () => {
+    clearFilter(); // Same behavior as clear filter
+  };
+
   // Filter by hashtag
   $feed.on('click', '.hashtag', function () {
     const hashtag = $(this).text();
     activeUserFilter = null; // Clear user filter
     activeHashtagFilter = hashtag; // Set active hashtag filter
     showHashtagTweets(hashtag);
+    showFilterIndicator(`Showing tweets with ${hashtag}`);
   });
+
+  // Handle clear filter button
+  $clearFilterBtn.click(() => clearFilter());
+
+  // Handle refresh feed button
+  $refreshFeedBtn.click(() => refreshFeed());
 
   // Function to handle form submission (post a tweet)
   const handleTweetSubmission = () => {

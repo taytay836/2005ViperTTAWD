@@ -35,6 +35,8 @@
       .username {
         font-size: 20px;
         font-weight: bold;
+        color: #ff0000; /* Red for username */
+        cursor: pointer;
       }
 
       .tweet-form input {
@@ -62,12 +64,32 @@
         color: #d3d3d3;
       }
 
-      /* Dodge Viper image */
-      .viper-image {
-        width: 100%;
-        max-width: 860px;
-        margin-bottom: 30px;
+      .hashtag {
+        color: #00ffcc; /* Aqua for hashtags */
+        cursor: pointer;
+      }
+
+      /* Visual indicators for active filters */
+      .filter-indicator {
+        background-color: #222;
+        color: #fff;
+        padding: 10px;
         border-radius: 10px;
+        margin-bottom: 20px;
+        display: none; /* Hidden initially */
+      }
+
+      .clear-filter-btn, .refresh-feed-btn {
+        background-color: #28a745;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        color: white;
+        cursor: pointer;
+      }
+
+      .clear-filter-btn:hover, .refresh-feed-btn:hover {
+        background-color: #218838;
       }
     </style>
   </head>
@@ -82,6 +104,13 @@
             class="viper-image"
             alt="Dodge Viper 2005 Blue"
           />
+
+          <!-- Filter Indicator -->
+          <div id="filter-indicator" class="filter-indicator">
+            <span id="filter-text"></span>
+            <button id="clear-filter" class="clear-filter-btn ml-3">Clear Filter</button>
+            <button id="refresh-feed" class="refresh-feed-btn ml-3">Refresh Feed</button>
+          </div>
 
           <!-- Tweet Form (with username and tweet input combined) -->
           <form class="tweet-form mb-4 d-flex justify-content-between">
