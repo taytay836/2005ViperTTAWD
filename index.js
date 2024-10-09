@@ -5,6 +5,8 @@ $(document).ready(() => {
   const $usernameInput = $tweetForm.find('.username-input');
   const $tweetInput = $tweetForm.find('.tweet-input');
   let lastTweetIndex = 0;
+  let activeUserFilter = null; // Track active user filter
+  let activeHashtagFilter = null; // Track active hashtag filter
 
   // Function to format timestamps
   const formatTime = (timestamp) => {
@@ -18,13 +20,17 @@ $(document).ready(() => {
     // Loop through tweets in reverse chronological order
     for (let i = tweets.length - 1; i >= 0; i--) {
       const tweet = tweets[i];
-      const $tweet = $('<div></div>').addClass('tweet-box');
+      const $tweet = $('<div></div>').addClass('tweet-box d-flex align-items-center');
       const $user = $('<div></div>').addClass('username').text(`@${tweet.user}`);
-      const $message = $('<p></p>').text(tweet.message);
+      const $message = $('<p></p>').html(parseHashtags(tweet.message));
       const $time = $('<span></span>').addClass('timestamp').text(formatTime(tweet.created_at));
 
       // Click event to filter tweets by user
-      $user.click(() => showUserTweets(tweet.user));
+      $user.click(() => {
+        activeUserFilter = tweet.user; // Set the active user filter
+        activeHashtagFilter = null; // Clear hashtag filter when showing user tweets
+        showUserTweets(tweet.user);
+      });
 
       // Append tweet details to the tweet-box div
       $tweet.append($user, $message, $time);
@@ -37,8 +43,21 @@ $(document).ready(() => {
     if (streams.home.length > lastTweetIndex) {
       const newTweets = streams.home.slice(lastTweetIndex);
       lastTweetIndex = streams.home.length;
-      renderTweets(newTweets);
+
+      // Check if an active user or hashtag filter exists
+      if (activeUserFilter) {
+        showUserTweets(activeUserFilter);
+      } else if (activeHashtagFilter) {
+        showHashtagTweets(activeHashtagFilter);
+      } else {
+        renderTweets(newTweets); // Default: Show all new tweets
+      }
     }
+  };
+
+  // Parse and make hashtags clickable
+  const parseHashtags = (message) => {
+    return message.replace(/#(\w+)/g, '<span class="hashtag">#$1</span>');
   };
 
   // Show specific user tweets
@@ -46,6 +65,20 @@ $(document).ready(() => {
     const userTweets = streams.users[user];
     renderTweets(userTweets);
   };
+
+  // Show tweets by hashtag
+  const showHashtagTweets = (hashtag) => {
+    const hashtagTweets = streams.home.filter(tweet => tweet.message.includes(hashtag));
+    renderTweets(hashtagTweets);
+  };
+
+  // Filter by hashtag
+  $feed.on('click', '.hashtag', function () {
+    const hashtag = $(this).text();
+    activeUserFilter = null; // Clear user filter
+    activeHashtagFilter = hashtag; // Set active hashtag filter
+    showHashtagTweets(hashtag);
+  });
 
   // Function to handle form submission (post a tweet)
   const handleTweetSubmission = () => {
@@ -82,7 +115,7 @@ $(document).ready(() => {
   const init = () => {
     handleTweetSubmission(); // Handle tweet form submission
     checkForNewTweets(); // Show initial tweets
-    setInterval(checkForNewTweets, 2000); // Check for new tweets every 2 seconds
+    setInterval(checkForNewTweets, 5000); // Slowed down to 5 seconds
   };
 
   init(); // Start the app
